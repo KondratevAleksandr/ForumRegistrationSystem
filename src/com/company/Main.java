@@ -12,7 +12,8 @@ public class Main {
         int operationCount = getOperationCount(scanner);
 
         for (int i = 0; i < operationCount; i++) {
-            Map<RequestParameter, String> request = getRequest(scanner);
+            Map<RequestParameter, String> requestMap = getRequest(scanner);
+            Request request = new Request(requestMap);
             userService.handleRequest(request);
         }
     }
