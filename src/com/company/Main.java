@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        UserService userService = new UserService();
+        UserService userService = UserService.INSTANCE;
         Scanner scanner = new Scanner(System.in);
         int operationCount = getOperationCount(scanner);
 
@@ -20,16 +20,21 @@ public class Main {
 
     public static int getOperationCount(Scanner scanner) {
         int operationCount = 0;
-        try {
-            System.out.println("Введите количество операций от 1 до 100: ");
-            operationCount = scanner.nextInt();
-            scanner.nextLine();
-            if (operationCount < 1 || operationCount > 100) {
-                System.out.println("Введено не корректное количество операций.");
+        while (true) {
+            try {
+                System.out.println("Введите количество операций от 1 до 100: ");
+                operationCount = scanner.nextInt();
+                scanner.nextLine();
+                if (operationCount < 1 || operationCount > 100) {
+                    System.out.println("Введено не корректное количество операций.");
+
+                } else {
+                    break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Некоректный ввод.");
+                scanner.next();
             }
-        } catch (InputMismatchException e) {
-            System.out.println("Некоректный ввод.");
-            scanner.next();
         }
         return operationCount;
     }

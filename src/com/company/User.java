@@ -19,7 +19,7 @@ public class User {
         return passwordHash;
     }
 
-    public boolean isOnLine() {
+    public boolean onlineStatus() {
         return isOnline;
     }
 

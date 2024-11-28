@@ -1,20 +1,29 @@
 package com.company;
 
+import java.util.Optional;
+
 public class LogoutHandler extends AbstractAuthRequestHandler {
+    public static final LogoutHandler INSTANCE = new LogoutHandler();
+
+    private LogoutHandler() {
+    }
+
     @Override
-    public void handle(Request request, UserRepository userRepository) {
+    public void handle(Request request) throws AuthException {
         String login = request.getParameter(RequestParameter.LOGIN);
 
         if (isValid(login)) {
-            System.out.println("fail: incorrect username");
-            return;
+            throw new AuthException("fail: incorrect username");
         }
 
-        User user = userRepository.findUser(login);
-        if (user == null) {
-            System.out.println("fail: no such user");
-        } else if (!user.isOnLine()) {
-            System.out.println("fail: already logged out");
+        Optional<User> optionalUser = userRepository.findUser(login);
+        if (optionalUser.isEmpty()) {
+            throw new AuthException("fail: no such user");
+        }
+
+        User user = optionalUser.get();
+        if (!user.onlineStatus()) {
+            throw new AuthException("fail: already logged out");
         } else {
             user.setOnLine(false);
             System.out.println("success: user logged out");

@@ -2,31 +2,33 @@ package com.company;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class UserService {
-    private UserRepository userRepository = new UserRepository();
+    public static final UserService INSTANCE = new UserService();
+
     private Map<String, RequestHandler> requestHandlers = new HashMap<String, RequestHandler>();
 
-    public UserService() {
-        requestHandlers.put("register", new RegisterHandler());
-        requestHandlers.put("login", new LoginHandler());
-        requestHandlers.put("logout", new LogoutHandler());
+    private UserService() {
+        requestHandlers.put("register", RegisterHandler.INSTANCE);
+        requestHandlers.put("login", LoginHandler.INSTANCE);
+        requestHandlers.put("logout", LogoutHandler.INSTANCE);
     }
 
     public void handleRequest(Request request) {
         String requestType = request.getParameter(RequestParameter.REQUEST_TYPE);
         RequestHandler handler = requestHandlers.get(requestType);
         if (handler != null) {
-            handler.handle(request, userRepository);
+            try {
+                handler.handle(request);
+            } catch (AuthException e) {
+                logError(e.getMessage());
+            }
         } else {
-            System.out.println("Неверная команда. Попробуйте снова");
+            logError("Неверная команда. Попробуйте снова");
         }
     }
 
-    private boolean isValid(String credentials) {
-        String regex = "^[\\x21-\\x7E]+$";
-        return credentials == null ||
-                credentials.length() <= 0 || credentials.length() > 30 || !Pattern.matches(regex, credentials);
+    private void logError(String message) {
+        System.out.println(message);
     }
 }

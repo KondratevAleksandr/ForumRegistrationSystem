@@ -15,8 +15,4 @@ public class Request {
         }
         return parameters.get(key);
     }
-
-    public Map<RequestParameter, String> getParameters() {
-        return parameters;
-    }
 }
