@@ -7,14 +7,13 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        UserService userService = UserService.INSTANCE;
         Scanner scanner = new Scanner(System.in);
         int operationCount = getOperationCount(scanner);
 
         for (int i = 0; i < operationCount; i++) {
-            Map<RequestParameter, String> requestMap = getRequest(scanner);
-            Request request = new Request(requestMap);
-            userService.handleRequest(request);
+            Map<RequestParameter, String> request = getRequest(scanner);
+            Request subRequest = new Request(request);
+            UserService.INSTANCE.handleRequest(subRequest);
         }
     }
 
@@ -27,7 +26,6 @@ public class Main {
                 scanner.nextLine();
                 if (operationCount < 1 || operationCount > 100) {
                     System.out.println("Введено не корректное количество операций.");
-
                 } else {
                     break;
                 }
@@ -45,27 +43,23 @@ public class Main {
 
         if (input.isEmpty()) {
             System.out.println("Неверный ввод. Попробуйте снова.");
-            return getRequest(scanner);
         }
 
         String[] parts = input.split(" ");
 
-        if (parts.length < 2 || parts.length > 3) {
-            System.out.println("Ошибка: недостаточно параметров.Попробуйте снова.");
-            return getRequest(scanner);
+        switch (parts.length) {
+            case 2 -> {
+                return Map.of(
+                        RequestParameter.REQUEST_TYPE, parts[0],
+                        RequestParameter.LOGIN, parts[1]);
+            }
+            case 3 -> {
+                return Map.of(
+                        RequestParameter.REQUEST_TYPE, parts[0],
+                        RequestParameter.LOGIN, parts[1],
+                        RequestParameter.PASSWORD, parts[2]);
+            }
+            default -> throw new IllegalArgumentException("Ошибка: недостаточно параметров.");
         }
-        Map<RequestParameter, String> request;
-
-        if (parts.length == 3) {
-            request = Map.of(
-                    RequestParameter.REQUEST_TYPE, parts[0],
-                    RequestParameter.LOGIN, parts[1],
-                    RequestParameter.PASSWORD, parts[2]);
-        } else {
-            request = Map.of(
-                    RequestParameter.REQUEST_TYPE, parts[0],
-                    RequestParameter.LOGIN, parts[1]);
-        }
-        return request;
     }
 }

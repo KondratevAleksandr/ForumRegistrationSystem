@@ -19,16 +19,13 @@ public class UserService {
         RequestHandler handler = requestHandlers.get(requestType);
         if (handler != null) {
             try {
-                handler.handle(request);
+                String response = handler.handle(request);
+                System.out.println(response);
             } catch (AuthException e) {
-                logError(e.getMessage());
+                System.out.println(e.getMessage());
             }
         } else {
-            logError("Неверная команда. Попробуйте снова");
+            System.out.println("Неверная команда. Попробуйте снова");
         }
-    }
-
-    private void logError(String message) {
-        System.out.println(message);
     }
 }

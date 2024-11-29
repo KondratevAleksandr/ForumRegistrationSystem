@@ -7,7 +7,7 @@ public class RegisterHandler extends AbstractAuthRequestHandler {
     }
 
     @Override
-    public void handle(Request request) throws AuthException {
+    public String handle(Request request) throws AuthException {
         String login = request.getParameter(RequestParameter.LOGIN);
         String password = request.getParameter(RequestParameter.PASSWORD);
 
@@ -20,6 +20,6 @@ public class RegisterHandler extends AbstractAuthRequestHandler {
         }
 
         userRepository.addUser(new User(login, password));
-        System.out.println("success: new user added");
+        return "success: new user added";
     }
 }

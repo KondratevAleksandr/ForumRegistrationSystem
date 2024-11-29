@@ -9,10 +9,10 @@ public class LogoutHandler extends AbstractAuthRequestHandler {
     }
 
     @Override
-    public void handle(Request request) throws AuthException {
+    public String handle(Request request) throws AuthException {
         String login = request.getParameter(RequestParameter.LOGIN);
 
-        if (isValid(login)) {
+        if (!isValid(login)) {
             throw new AuthException("fail: incorrect username");
         }
 
@@ -26,7 +26,7 @@ public class LogoutHandler extends AbstractAuthRequestHandler {
             throw new AuthException("fail: already logged out");
         } else {
             user.setOnLine(false);
-            System.out.println("success: user logged out");
+            return "success: user logged out";
         }
     }
 }

@@ -9,11 +9,11 @@ public class LoginHandler extends AbstractAuthRequestHandler {
     }
 
     @Override
-    public void handle(Request request) throws AuthException {
+    public String handle(Request request) throws AuthException {
         String login = request.getParameter(RequestParameter.LOGIN);
         String password = request.getParameter(RequestParameter.PASSWORD);
 
-        if (isValid(login) || isValid(password)) {
+        if (!isValid(login) || !isValid(password)) {
             throw new AuthException("fail: incorrect username or password");
         }
 
@@ -29,7 +29,7 @@ public class LoginHandler extends AbstractAuthRequestHandler {
             throw new AuthException("fail: already logged in");
         } else {
             user.setOnLine(true);
-            System.out.println("success: user logged in");
+            return "success: user logged in";
         }
     }
 }
